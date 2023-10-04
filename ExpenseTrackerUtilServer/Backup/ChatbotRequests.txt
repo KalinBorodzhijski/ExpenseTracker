@@ -1,0 +1,90 @@
+Create category:
+- Can you create category Vehicle
+- Create category Vehicle
+- Create category Food
+- You should create category Food
+- Food(Games) category should be created
+- Introduce new category named Food(Vehicle/Games)
+
+Delete category:
+- Can you remove category Vehicle
+- Can you remove category Food
+- Can you delete category Vehicle
+- I don't want category Vehicle
+- Get rid ot Vehicle category
+- Let's remove Food(Games) category
+
+	Category names:
+	Food
+	Games
+	Vehicle
+	Additional
+
+List categories:
+- Show me my categories
+- List all my categories
+- Show me all my different categories
+- Can you please dispay what categories I have
+
+
+Ask Functions:
+- Tell me your functionalities
+- What can you do
+- List me your features
+- Show me what you can do
+
+
+Add expense:
+- Add expense McDonalds food for $34 in Food
+
+Delete expense:
+- Delete expense Lidl from Food with amount $100
+
+
+List expenses:
+- Can you display me my expenses in category Food ?
+- Show me my expenses in category Food
+- I want to see my expenses in cateogry Food
+
+List income:
+- Can you show me my incomes ?
+
+
+Monthly summary:
+- Show me my monthly summary for August
+- Show me analysis for September
+- I want to see analysis for January
+
+Compare months:
+- Can you compare September and August
+- Show me the differences between March and April
+
+
+Biggest expense:
+- Show me my biggest expense for March
+- Can you tell me how much did I spend the most in April
+
+
+Suggest saving:
+- Can you suggest me how to save
+- How to save my money
+
+
+
+
+All of the intents:
+- Create new category - Entities: category_name
+- Delete existing category - Entities: category_name
+- List all categories
+- Create expense - Entities: category_name, expense_name, amount
+- Delete expense - Entities: category_name, expense_name, amount
+- List all expenses in category - Entities: category_name
+- Add income - Entities: income_name, amount
+- List all incomes
+- Monthly summary - Entites: month_name
+- Compare months - Entites: month_one, month_two
+- Biggest expense - Entities: period
+- Suggest savings
+- Budget advice
+
+

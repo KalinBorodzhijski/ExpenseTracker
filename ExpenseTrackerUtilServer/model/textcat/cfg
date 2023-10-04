@@ -1,0 +1,17 @@
+{
+  "labels":[
+    "CREATE_CATEGORY",
+    "DELETE_CATEGORY",
+    "LIST_CATEGORIES",
+    "LIST_EXPENSES",
+    "LIST_INCOMES",
+    "MONTHLY_SUMMARY",
+    "BIGGEST_EXPENSE",
+    "SUGGEST_SAVING",
+    "COMPARE_MONTHS",
+    "GREETING",
+    "ASK_FUNCTIONS"
+  ],
+  "threshold":0.0,
+  "positive_label":null
+}

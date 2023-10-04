@@ -1,0 +1,27 @@
+<nav class="navbar  fixed-top navbar-expand-sm bg-primary navbar-dark">
+
+    <div class="navbar-collapse custom-margin-nav">
+        <ul class = "navbar-nav">
+            <li *ngIf="authService.isLoggedOut()" class = "nav-item">
+                <a routerLink="login" routerLinkActive="active" class="nav-link" >LogIn</a>
+            </li>
+            <li *ngIf="authService.isLoggedOut()" class = "nav-item">
+                <a routerLink="register" routerLinkActive="active" class="nav-link" >Registration</a>
+            </li>
+            <li *ngIf="authService.isLoggedIn()" class = "nav-item">
+                <a routerLink="dashboard" routerLinkActive="active" class="nav-link" >Home</a>
+            </li>
+            <li *ngIf="authService.isLoggedIn()" class = "nav-item">
+                <a (click)="handleLogOutClick()" routerLink="login" routerLinkActive="active" class="nav-link" >LogOut</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<div class="container main-body" style="padding-top: 1%; padding-bottom: 3%;">
+    <router-outlet></router-outlet>
+</div>
+
+<app-chat *ngIf="authService.isLoggedIn()"></app-chat>
+<app-currency-convertor></app-currency-convertor>

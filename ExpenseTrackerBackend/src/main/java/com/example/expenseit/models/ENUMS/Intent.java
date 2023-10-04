@@ -1,0 +1,18 @@
+package com.example.expenseit.models.ENUMS;
+
+public enum Intent {
+    CREATE_CATEGORY,
+    DELETE_CATEGORY,
+    LIST_CATEGORIES,
+    ADD_EXPENSE,
+    DELETE_EXPENSE,
+    LIST_EXPENSES,
+    ADD_INCOME,
+    LIST_INCOMES,
+    MONTHLY_SUMMARY,
+    BIGGEST_EXPENSE,
+    SUGGEST_SAVING,
+    COMPARE_MONTHS,
+    GREETING,
+    ASK_FUNCTIONS;
+}

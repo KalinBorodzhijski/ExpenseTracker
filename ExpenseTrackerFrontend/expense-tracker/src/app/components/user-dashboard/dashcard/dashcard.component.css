@@ -1,0 +1,19 @@
+.add-card {
+  background-color: #f8f9fa;
+  border: 1px dashed #dee2e6;
+  text-align: center;
+  padding: 10px;
+}
+
+.card:hover {
+  cursor: pointer;
+}
+
+.add-card::before {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.card {
+  text-align: center;
+}

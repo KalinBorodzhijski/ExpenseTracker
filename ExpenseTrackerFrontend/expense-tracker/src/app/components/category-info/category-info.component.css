@@ -1,0 +1,137 @@
+.flashcard {
+  background-color: #f8f9fa;
+  padding: 10px;
+  margin-top: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.flashcard h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.validation-message {
+  color: red;
+}
+
+.average-card {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+}
+
+.icon {
+  margin-right: 15px;
+}
+
+.amount {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.label {
+  display: block;
+  color: #777;
+}
+
+.pagination-controls {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.example-month-picker .mat-calendar-body-cell-content {
+  pointer-events: none;
+  opacity: 0;
+}
+
+
+.file-upload-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.file-input {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-name {
+  margin-left: 10px;
+  font-style: italic;
+}
+
+.full-width-input,
+.full-width-textarea {
+  width: 100%;
+}
+
+.slider-toggle-container {
+  display: flex;
+  align-items: center;
+  width: 250px;
+}
+
+.slider-toggle-wrapper {
+  position: relative;
+  width: 60px;
+  margin: 0 10px;
+}
+
+.slider-toggle {
+  display: none;
+}
+
+.slider-toggle-label {
+  background: linear-gradient(90deg, rgba(0, 123, 255, 0.5), rgba(220, 220, 220, 0.8));
+  border-radius: 20px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  width: 100%;
+  height: 30px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.slider-toggle-label::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 1%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s;
+}
+
+.slider-toggle:checked + .slider-toggle-label::before {
+  left: 55%;
+}
+
+.slider-toggle:checked + .slider-toggle-label {
+  background: linear-gradient(90deg, rgba(220, 220, 220, 0.8), rgba(0, 123, 255, 0.5));
+}
+
+.label-off,
+.label-on {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}

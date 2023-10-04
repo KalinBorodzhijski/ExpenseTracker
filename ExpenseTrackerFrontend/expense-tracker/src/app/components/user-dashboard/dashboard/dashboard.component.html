@@ -1,0 +1,149 @@
+<div class="container">
+
+  <h1 class="welcome-message "> Hello, {{username}}</h1>
+  <h2 class="category-title">Your Categories</h2>
+  <div class="row">
+    <div class="col-md-8">
+      
+      
+      <div class="card-container d-flex flex-wrap">
+        <div class="col-md-4 category-card" *ngFor="let card of cards">
+          <div class="card mb-4" (click)="viewCategory(card.categoryId)">
+            <app-dashcard [title]="card.title" [content]="card.content" [categoryId]="card.categoryId"
+              (deleteCategory)="deleteCategory($event)" (editCategory)="editCategory($event)"></app-dashcard>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card mb-4" (click)="openAddCategoryDialog()">
+            <app-dashcard [title]="addCard.title" [content]="addCard.content" [isAddCard]="true"></app-dashcard>
+          </div>
+        </div>
+      </div>
+
+      <app-analysis></app-analysis>
+    </div>
+
+    <div class="col-md-4">
+
+      <div class="card mt-4 unused-categories-card" *ngIf="">
+        <div class="card-header">
+          <h4>Unused Categories</h4>
+        </div>
+        <div class="card-body">
+          <p>These categories are currently unused, because you don't have expenses in them for the past two months:</p>
+          <ul>
+            <li *ngFor="let unusedCategory of unusedCategories">
+              {{ unusedCategory.title }} <button (click)="deleteCategory(unusedCategory.categoryId)"
+                class="btn btn-danger btn-sm delete-btn">Delete</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card mt-4 unused-categories-card" *ngIf="showUnusedCategoriesCard && unusedCategories && unusedCategories.length > 0">
+        <div class="card-header">
+          <h4>Unused Categories</h4>
+          <button class="close-btn" (click)="hideUnusedCategoriesCard()">&times;</button>
+        </div>
+        <div class="card-body">
+          <p>These categories are currently unused, because there are no expenses for the past three months:</p>
+          <ul>
+            <li *ngFor="let unusedCategory of unusedCategories">
+              {{ unusedCategory.title }}
+              <button (click)="deleteCategory(unusedCategory.categoryId)"
+                class="btn btn-danger btn-sm delete-btn">Delete</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Add New Income</h5>
+          <form (submit)="addIncome()">
+            <div class="form-group">
+              <label>Amount:</label>
+              <input class="form-control" [(ngModel)]="newIncome.amount" name="amount" required>
+            </div>
+            <div *ngIf="formSubmitted && !newIncome.amount" class="validation-message">
+              Amount is required.
+            </div>
+            <div *ngIf="formSubmitted && newIncome.amount?.valueOf() <= 0" class="validation-message">
+              Amount should be greater than 0.
+            </div>
+            <div class="form-group">
+              <label>Note:</label>
+              <input class="form-control" [(ngModel)]="newIncome.note" name="note" required maxlength="50">
+              <div *ngIf="formSubmitted && !newIncome.note" class="validation-message">
+                Title is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Date:</label>
+              <input type="date" class="form-control" [(ngModel)]="newIncome.transactionDate" name="date" required>
+              <div *ngIf="formSubmitted && !newIncome.transactionDate" class="validation-message">
+                Date is required.
+              </div>
+              <div *ngIf="formSubmitted && isFutureDate(newIncome.transactionDate)" class="validation-message">
+                Date cannot be in the future.
+              </div>
+            </div>
+            <button class="btn btn-success" type="submit">Add Income</button>
+          </form>
+        </div>
+      </div>
+
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Available Balance</h5>
+          <div class="balance">
+            <strong>{{ balance | currency:'BGN':'symbol':'1.2-2' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Income History</h5>
+          <div class="income-history" style="overflow-y: scroll; max-height: 200px;">
+            <div *ngFor="let income of incomeHistory" class="income-entry">
+              <div class="entry-item">
+                <strong>Note:</strong> {{ income.note }}
+              </div>
+              <div class="entry-item">
+                <strong>Amount:</strong> {{ income.amount | currency:'BGN':'symbol':'1.2-2' }}
+              </div>
+              <div class="entry-item">
+                <strong>Date:</strong> {{ income.transactionDate | date:'mediumDate' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">All Expenses</h5>
+          <ul class="list-group">
+            <div class="expenses-list" style="overflow-y: scroll; max-height: 200px;">
+              <ul class="list-group">
+                <li class="list-group-item" *ngFor="let expense of expenses">
+                  <div>
+                    <strong>Note:</strong> {{ expense.note }}
+                  </div>
+                  <div>
+                    <strong>Amount:</strong> {{ expense.amount | currency:'BGN':'symbol':'1.2-2' }}
+                  </div>
+                  <div>
+                    <strong>Date:</strong> {{ expense.transactionDate | date:'mediumDate' }}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

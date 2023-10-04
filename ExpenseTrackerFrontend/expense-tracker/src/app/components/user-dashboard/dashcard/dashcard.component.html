@@ -1,0 +1,20 @@
+<div class="card" *ngIf="!isAddCard">
+    <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">{{ title }}</h3>
+          <p class="card-text" >{{ content }}</p>
+          <button class="btn btn-danger" (click)="$event.stopPropagation(); deleteClicked()">Delete</button>
+          <button class="btn btn-primary" (click)="$event.stopPropagation(); editClicked()">Edit</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="card add-card" *ngIf="isAddCard">
+    <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">{{ title }}</h3>
+          <p class="card-text">{{ content }}</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,268 @@
+<div class="container mt-4">
+
+  <h1 class="mb-4">{{categoryName}}</h1>
+
+
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="form-group">
+        <label>Select Month and Year:</label>
+        <div>
+          <select class="form-control" [(ngModel)]="selectedYear" (change)="updateExpensesByMonth()">
+            <option *ngFor="let year of years">{{year}}</option>
+          </select>
+          <select class="form-control mr-2" [(ngModel)]="selectedMonth" (change)="updateExpensesByMonth()">
+            <option *ngFor="let month of months" [value]="month.value">{{month.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-lg-3">
+      <div class="average-card">
+        <div class="icon">
+          <i class="fa fa-wallet"></i>
+        </div>
+        <div class="details">
+          <span class="amount">{{ this.totalExpenses | currency:'BGN':'symbol':'1.2-2' }}</span>
+          <span class="label">Spent this Month</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-lg-3">
+      <div class="average-card-container">
+        <div class="average-card">
+          <div class="icon">
+            <i class="fa fa-calendar-day"></i>
+          </div>
+          <div class="details">
+            <span class="amount">{{ currentDailyAverage | currency:'BGN':'symbol':'1.2-2' }}</span>
+            <span class="label">Daily Average</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3">
+      <div class="average-card" *ngIf="forecastedDailyAverage > 0">
+        <div class="icon">
+          <i class="fa fa-calendar-alt"></i>
+        </div>
+        <div class="details">
+          <span class="amount">{{ forecastedDailyAverage | currency:'BGN':'symbol':'1.2-2' }}</span>
+          <span class="label">Daily Recomended</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-lg-3">
+      <button class="btn btn-primary w-100 text-center" (click)="toggleBudgetCard()">{{ showBudgetCard ? 'Hide' :
+        'SetBudget' }}</button>
+    </div>
+  </div>
+
+  <div class="row mt-2" *ngIf="showBudgetCard">
+    <div class="col-lg-3">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Set Monthly Budget</h4>
+          <form (submit)="saveBudget(tempBudgetAmount)">
+            <div class="form-group">
+              <label>Amount:</label>
+              <input class="form-control" [(ngModel)]="tempBudgetAmount" name="budgetAmount" required>
+              <div *ngIf="budgetFormSubmitted && !tempBudgetAmount" class="text-danger mt-1">
+                Budget amount is required.
+              </div>
+              <div *ngIf="budgetFormSubmitted && tempBudgetAmount.valueOf() <= 0" class="text-danger mt-1">
+                Budget should be greater than 0.
+              </div>
+              <div *ngIf="budgetFormSubmitted && tempBudgetAmount.valueOf() >= 100000" class="text-danger mt-1">
+                Budget should lower than 100000.
+              </div>
+            </div>
+            <button class="btn btn-success" type="submit">Save Budget</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-lg-12">
+      <div *ngIf="budgetAmount > 0">
+        <h5 class="mb-2">Budget: {{ budgetAmount | currency:'BGN':'symbol':'1.0-0' }}</h5>
+        <div class="progress">
+          <div class="progress-bar" [style.width]="calculateBudgetProgress()" [ngClass]="{'bg-danger': isOverBudget()}">
+          </div>
+        </div>
+        <small *ngIf="isOverBudget()" class="text-danger mt-2 d-block">You've exceeded your budget!</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Expense List</h4>
+          <table class="table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+              <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let expense of paginatedExpenses">
+                <td>{{ expense.note }}</td>
+                <td>{{ expense.amount }}</td>
+                <td>{{ expense.transactionDate | date }}</td>
+                <td>
+                  <button class="btn btn-danger btn-sm" (click)="deleteExpense(expense)">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="pagination-controls">
+            <button class="btn btn-primary btn-sm" (click)="previousPage()"
+              [disabled]="pageNumber === 1">Previous</button>
+            <span>Page: {{ pageNumber }}</span>
+            <button class="btn btn-primary btn-sm" (click)="nextPage()"
+              [disabled]="pageNumber * pageSize >= totalItems">Next</button>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Add New Expense</h4>
+
+          <div class="slider-toggle-container">
+            <span class="label-off">Manual Entry</span>
+            <div class="slider-toggle-wrapper">
+              <input type="checkbox" id="slider-toggle" class="slider-toggle" (change)="toggleReceiptUpload()" [checked]="showReceiptUpload">
+              <label for="slider-toggle" class="slider-toggle-label"></label>
+            </div>
+            <span class="label-on">Image Scan</span>
+          </div>
+
+          <form *ngIf="!showReceiptUpload" (submit)="addExpense()">
+            <div class="form-group">
+              <label>Title:</label>
+              <input class="form-control" [(ngModel)]="newExpense.note" name="title" required>
+              <div *ngIf="formSubmitted && !newExpense.note" class="text-danger mt-1">
+                Title is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Amount:</label>
+              <input class="form-control" [(ngModel)]="newExpense.amount" name="amount" required>
+              <div *ngIf="formSubmitted && !newExpense.amount" class="text-danger mt-1">
+                Amount is required.
+              </div>
+              <div *ngIf="formSubmitted && newExpense.amount.valueOf() <= 0" class="text-danger mt-1">
+                Amount should be greater than 0.
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Date:</label>
+              <input type="date" class="form-control" [(ngModel)]="newExpense.transactionDate" name="date" required>
+            </div>
+            <button class="btn btn-success" type="submit">Add Expense</button>
+          </form>
+
+
+          <!-- Upload Receipt Form -->
+          <div *ngIf="showReceiptUpload">
+            <mat-dialog-content>
+              <form [formGroup]="uploadForm" (ngSubmit)="onUpload()">
+
+                <div class="file-upload-wrapper">
+                  <button class="btn btn-primary" color="primary" type="button">
+                    <mat-icon>attach_file</mat-icon> Upload Receipt
+                  </button>
+                  <span class="file-name" *ngIf="receipFile?.name">{{ receipFile?.name }}</span>
+                  <input type="file" id="fileInput" accept=".jpg" formControlName="file" (change)="onFileChange($event)"
+                    class="file-input">
+                </div>
+                <br />
+                <br />
+
+                <mat-form-field appearance="outline" *ngIf="receiptData" class="full-width-input">
+                  <mat-label>Date</mat-label>
+                  <input matInput formControlName="date" [(ngModel)]="receiptData.date">
+                  <mat-error *ngIf="uploadForm.get('date')?.hasError('required')">Date is required</mat-error>
+                  <mat-error *ngIf="uploadForm.get('date')?.hasError('invalidDate')">Invalid date format</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" *ngIf="receiptData" class="full-width-input">
+                  <mat-label>Total Amount</mat-label>
+                  <input matInput formControlName="total" [(ngModel)]="receiptData.total">
+                  <mat-error *ngIf="uploadForm.get('total')?.hasError('required')">Total amount is
+                    required</mat-error>
+                  <mat-error *ngIf="uploadForm.get('total')?.hasError('invalidNumber')">Invalid number
+                    format</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" *ngIf="receiptData" class="full-width-textarea">
+                  <mat-label>Products</mat-label>
+                  <textarea matInput formControlName="products" [(ngModel)]="receiptData.products"></textarea>
+                  <mat-error *ngIf="uploadForm.get('products')?.hasError('required')">Products are
+                    required</mat-error>
+                </mat-form-field>
+
+              </form>
+            </mat-dialog-content>
+
+            <mat-dialog-actions>
+              <button mat-raised-button color="accent" (click)="onProcess()">Process</button>
+              <button mat-button (click)="handleCancel()">Cancel</button>
+              <button mat-raised-button color="primary" *ngIf="receiptData" (click)="onSubmit()"
+                [disabled]="uploadForm.invalid">Submit</button>
+            </mat-dialog-actions>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Monthly Average Expenses</h4>
+          <div class="chart-container" style="height: 300px;">
+            <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions"
+              type="bar"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Monthly Expenses</h4>
+          <div class="chart-container" style="height: 300px;">
+            <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="chartOptions"
+              type="line"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

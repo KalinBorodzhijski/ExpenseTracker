@@ -1,0 +1,16 @@
+<div class="category-form">
+  <h2 class="category-form-title">Category Information</h2>
+  <form class="category-form-container" (ngSubmit)="saveCategory()">
+    <div class="form-group">
+      <label for="categoryName">Name:</label>
+      <input type="text" class="form-control" id="categoryName" [(ngModel)]="categoryName" name="categoryName" required maxlength="20">
+    </div>
+    <div class="form-group">
+      <label for="categoryDescription">Description:</label>
+      <textarea class="form-control" id="categoryDescription" [(ngModel)]="categoryDescription" name="categoryDescription" required maxlength="50"></textarea>
+    </div>
+    <div *ngIf="showError" class="error-message">Please enter both name and description.</div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-secondary" (click)="closeDialog()">Cancel</button>
+  </form>
+</div>

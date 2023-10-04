@@ -1,0 +1,97 @@
+<!-- Start of the Analysis Card -->
+<div class="card mt-5">
+  <div class="card-header" id="headingAnalysis" (click)="toggleAnalysis=!toggleAnalysis"
+    [attr.aria-expanded]="toggleAnalysis" aria-controls="collapseAnalysis">
+    <h4 class="mb-0">
+      Analysis <i class="fa fa-angle-down"></i>
+    </h4>
+  </div>
+
+  <div id="collapseAnalysis" [ngClass]="toggleAnalysis ? 'collapse show' : 'collapse'"
+    aria-labelledby="headingAnalysis">
+
+    <!-- Start of the Analysis Card body -->
+    <div class="card-body">
+      
+      <!-- First Column and Second Column -->
+      <div class="row">
+        
+        <!-- First Column -->
+        <div class="col-lg-6">
+          
+          <!-- Row 1: Monthly spendings -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Monthly spendings</h4>
+                  <canvas baseChart [datasets]="chartDataMonthlyPredictions"
+                    [labels]="chartLabelsMonthlyPredictions" [options]="chartOptions" type="line"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Row 2: Expense Analysis -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <div class="card" [ngClass]="{ 'rising-trend-card': isRisingTrend }">
+                <div class="card-body">
+                  <h4 class="card-title">Expense Analysis</h4>
+                  <div *ngIf="isRisingTrend" class="alert alert-warning">
+                    We have detected increasing prediction for the next months. Consider revisiting your spending habits.
+                  </div>
+                  <canvas baseChart [datasets]="trendChartData" [labels]="trendChartLabels" [options]="chartOptions"
+                    type="bar"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Second Column -->
+        <div class="col-lg-6">
+          <!-- Monthly Expense Distribution -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h4 class="card-title">Monthly Expense Distribution</h4>
+              <div style="padding-top: 50px;">
+                <canvas baseChart [datasets]="expenseDistributionData" [labels]="expenseDistributionLabels"
+                type="pie" [options]="pieChartOptions"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Second Row -->
+      <div class="row mt-4">
+        <!-- Monthly Average Expenses section -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Monthly Average Expenses</h4>
+              <canvas baseChart [datasets]="chartDataAverageExpensePerMonth"
+                [labels]="chartLabelsAverageExpensePerMonth" [options]="chartOptions" type="bar"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Net Worth section -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Net Worth Analysis</h4>
+              <canvas baseChart [datasets]="netWorthChartData" [labels]="netWorthChartLabels"
+                [options]="chartOptions" type="line">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- End of the Analysis Card -->
+

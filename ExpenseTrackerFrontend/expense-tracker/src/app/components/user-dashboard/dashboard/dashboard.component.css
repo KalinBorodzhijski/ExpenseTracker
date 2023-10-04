@@ -1,0 +1,144 @@
+.validation-message {
+  color: red;
+}
+
+.income-history {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.income-entry {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.entry-item {
+  margin-right: 10px;
+}
+
+.welcome-message {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.rising-trend-card {
+  border: 2px solid red;
+  box-shadow: 0 4px 8px rgba(255, 0, 0, 0.1);
+}
+
+
+
+.file-upload-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.file-input {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-name {
+  margin-left: 10px;
+  font-style: italic;
+}
+
+.full-width-input,
+.full-width-textarea {
+  width: 100%;
+}
+
+
+.unused-categories-card {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.unused-categories-card h4 {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.unused-categories-card ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.unused-categories-card li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed #e0e0e0;
+}
+
+.unused-categories-card .delete-btn {
+  color: #fff;
+  background-color: #e74c3c;
+  border: none;
+}
+
+.unused-categories-card .delete-btn:hover {
+  background-color: #c0392b;
+}
+
+.unused-categories-card .card-header {
+  position: relative;
+}
+
+.unused-categories-card .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.unused-categories-card .close-btn:focus {
+  outline: none;
+}
+
+.category-title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.category-card .card {
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card .card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.equal-height .card-body {
+  height: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
