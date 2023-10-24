@@ -1,5 +1,3 @@
-
-# Add the TextCategorizer to the pipeline
 config = {
     "model": {
         "@architectures": "spacy.TextCatEnsemble.v2",

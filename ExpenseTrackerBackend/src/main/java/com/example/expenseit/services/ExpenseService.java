@@ -153,6 +153,7 @@ public class ExpenseService {
                 .filter(expense -> !expense.getTransactionDate().isBefore(sixMonthsAgo.atDay(1))
                         && !expense.getTransactionDate().isAfter(LocalDate.now()))
                 .collect(Collectors.toList());
+
         Map<YearMonth, Double> monthlyExpensesSum = getMonthlyExpensesSum(expenses);
        monthlyExpensesSum = getMonthlyExpensesSumWithMissingMonths(monthlyExpensesSum);
         Map<YearMonth, Double> result = predictNextMonths(monthlyExpensesSum);
@@ -237,7 +238,7 @@ public class ExpenseService {
     Map<YearMonth, Double> getMonthlyExpensesSumWithMissingMonths(Map<YearMonth, Double> monthlyExpensesSum) {
 
         YearMonth currentMonth = YearMonth.now();
-        YearMonth sixMonthsAgo = currentMonth.minusMonths(5);
+        YearMonth sixMonthsAgo = currentMonth.minusMonths(6);
         Map<YearMonth, Double> result = new HashMap<>();
         YearMonth month = sixMonthsAgo;
         while (!month.isAfter(currentMonth)) {

@@ -9,7 +9,7 @@ import { NetworthService } from 'src/app/services/networth_service/networth.serv
   templateUrl: './analysis.component.html',
   styleUrls: ['./analysis.component.css']
 })
-export class AnalysisComponent implements OnInit{
+export class AnalysisComponent implements OnInit {
 
   toggleAnalysis: boolean = true;
   monthlyExpensesSum: { [key: string]: number } = {};
@@ -25,11 +25,9 @@ export class AnalysisComponent implements OnInit{
   expenseDistributionData: ChartDataset[] = [];
   expenseDistributionLabels: string[] = [];
 
-
   netWorthChartData: any[] = [];
   netWorthChartLabels: string[] = [];
 
-  
   categoryData: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
   chartDataAverageExpensePerMonth: ChartDataset[] = [];
   chartLabelsAverageExpensePerMonth: string[] = [];
@@ -37,7 +35,6 @@ export class AnalysisComponent implements OnInit{
   chartDataMonthlyPredictions: ChartDataset[] = [];
   chartLabelsMonthlyPredictions: string[] = [];
 
-  
   chartOptions: ChartOptions = {
     responsive: true,
     scales: {
@@ -51,16 +48,16 @@ export class AnalysisComponent implements OnInit{
   };
 
   constructor(private networthService: NetworthService,
-              private expenseService: ExpenseService,
-              private snackBar: MatSnackBar){
-    
+    private expenseService: ExpenseService,
+    private snackBar: MatSnackBar) {
+
   }
 
   ngOnInit(): void {
     this.reload();
   }
 
-  reload(){
+  reload() {
     this.processPredictionChartsData();
     this.getNetWorth();
     this.processChartData();
@@ -68,8 +65,6 @@ export class AnalysisComponent implements OnInit{
     this.loadTrendAnalysisData();
   }
 
-
-  
   getNetWorth() {
     this.networthService.getNetWorth().subscribe({
       error: e => { this.snackBar.open('Error loading net worth !', 'Close', { duration: 3000 }) },
@@ -96,10 +91,9 @@ export class AnalysisComponent implements OnInit{
         this.netWorthChartLabels = [...Object.keys(actualData), ...Object.keys(predictedData)]
       }
     })
-
   }
 
-  
+
   processChartData() {
 
     this.expenseService.getAverageByMonth().subscribe({
@@ -164,8 +158,17 @@ export class AnalysisComponent implements OnInit{
         const dataValues: number[] = (Object.values(data) as number[]).map(value => Number(value));
         this.expenseDistributionLabels = Object.keys(data);
         this.expenseDistributionData = [{ data: dataValues, label: 'Monthly Expeses' }];
+
+        if (!this.expenseDistributionData.some(dataset =>
+          dataset.data.some(value => typeof value === 'number' && value > 0))) {
+          this.expenseDistributionData = [{
+            data: [1],
+            backgroundColor: ["#CCCCCC"]
+          }];
+          this.expenseDistributionLabels = ["No Expenses"];
+        }
       }
-    })
+    });
   }
 
   loadTrendAnalysisData(): void {
@@ -219,6 +222,5 @@ export class AnalysisComponent implements OnInit{
       }
     })
   }
-
 
 }

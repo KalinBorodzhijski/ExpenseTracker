@@ -49,7 +49,7 @@ def predict():
         
         if not data:
             return jsonify(error="Missing 'data' key in request or data is empty"), 400
-
+        print(data)
         model = pm.auto_arima(data, seasonal=False, trace=True,
                       error_action='ignore', suppress_warnings=True, 
                       stepwise=True)

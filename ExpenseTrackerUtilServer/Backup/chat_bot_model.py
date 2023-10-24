@@ -1,10 +1,14 @@
 import spacy
 from spacy.util import minibatch, compounding
 import random
+import time
 from spacy.training import Example
 from spacy.matcher import Matcher
+from sklearn.model_selection import train_test_split
 from training_data import TRAIN_DATA, GREETING_RESPONSES
 from config import *
+
+
 
 class ChatBotModel:
 
@@ -13,6 +17,8 @@ class ChatBotModel:
         if load_from_disk:
             self.load_model_from_disk()
         else: 
+            intents = [max(annotations.get("cats", {}).items(), key=lambda x: x[1])[0] for _, annotations in TRAIN_DATA]
+            self.train_data, self.test_data = train_test_split(TRAIN_DATA, test_size=0.2, stratify=intents, random_state=42)
             self.init_model()
             self.train_model(80)
             self.save_model_to_disk()
@@ -40,32 +46,43 @@ class ChatBotModel:
 
 
     def train_model(self, iterations):
-        previous_loss = None
-        convergence_threshold = 0.001
+        best_combined_score = 0.0
+        patience = 5
+        no_improvement = 0
         optimizer = self.nlp.begin_training()
         optimizer.learn_rate = 0.01
         train_examples = [Example.from_dict(self.nlp(text), annotations) for text, annotations in TRAIN_DATA]
         for i in range(iterations):
+            start_time = time.time()
             random.shuffle(train_examples)
             losses = {}
 
-            batches = minibatch(train_examples, size=compounding(2.0, 64.0, 1.005))
+            batches = minibatch(train_examples, size=compounding(4.0, 32.0, 1.002))
             for batch in batches:
                 self.nlp.update(batch, drop=0.3, losses=losses)
             
+            end_time = time.time()
+            epoch_duration = end_time - start_time
+
             print(f"Losses at iteration {i} - {losses}")
+            print(f"Duration of epoch {i} is {epoch_duration:.2f} seconds")
+            textcat_accuracy = self.evaluate_accuracy(self.test_data)
+            ner_accuracy = self.evaluate_ner_accuracy(self.test_data)
+            textcat_weight = 0.65
+            ner_weight = 0.35
+            combined_score = (textcat_accuracy * textcat_weight) + (ner_accuracy * ner_weight)
 
-            total_loss = sum(losses.values())
-            
-            # Check for convergence
-            if previous_loss is not None:
-                loss_difference = abs(total_loss - previous_loss)
-                
-                if loss_difference < convergence_threshold:
-                    print(f"Model is converging at iteration {i}. Stopping training.")
-                    break
+            print(f"Accuracy on test data at iteration {i} - {combined_score}")
 
-            previous_loss = total_loss
+            if combined_score > best_combined_score:
+                best_combined_score = combined_score
+                no_improvement = 0
+            else:
+                no_improvement += 1
+
+            if no_improvement >= patience:
+                print(f"No improvement in accuracy for {patience} consecutive iterations. Stopping training.")
+                break
 
     def get_intent_and_entity(self, input_text):
 
@@ -174,8 +191,36 @@ class ChatBotModel:
                 self.doc.ents = [income_name, amount]
                 self.doc.ents = tuple(self.doc.ents)
 
+    def evaluate_accuracy(self, test_data):
+        correct_predictions = 0
+        total_predictions = 0
+        for text, annotations in test_data:
+            doc = self.nlp(text)
+            intent = max(doc.cats, key=doc.cats.get)
+            correct_intent = max(annotations.get("cats", {}).items(), key=lambda x: x[1])[0]
+            if intent == correct_intent:
+                correct_predictions += 1
+            total_predictions += 1
+
+        return correct_predictions / total_predictions if total_predictions > 0 else 0
+    
+    def evaluate_ner_accuracy(self, test_data):
+        correct_ner_predictions = 0
+        total_ner_predictions = 0
+        for text, annotations in test_data:
+            doc = self.nlp(text)
+            predicted_entities = {ent.label_: ent.text for ent in doc.ents}
+            true_entities = {ent[2]: text[ent[0]:ent[1]] for ent in annotations.get("entities", [])}
+            correct_ner_predictions += len(predicted_entities.keys() & true_entities.keys())
+            total_ner_predictions += len(true_entities.keys())
+
+        ner_accuracy = correct_ner_predictions / total_ner_predictions if total_ner_predictions > 0 else 0
+        return ner_accuracy
+
+
     def save_model_to_disk(self):
         self.nlp.to_disk("./model")
 
     def load_model_from_disk(self):
         self.nlp = spacy.load("./model")
+

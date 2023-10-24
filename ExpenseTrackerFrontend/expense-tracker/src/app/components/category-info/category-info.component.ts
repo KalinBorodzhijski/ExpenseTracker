@@ -36,6 +36,8 @@ export class CategoryInfoComponent implements OnInit {
   uploadForm: FormGroup;
   receiptData: any;
 
+  currentDate = new Date();
+
   currentDailyAverage: number = 0;
   forecastedDailyAverage: number = 0;
   monthPredictions: number[] = [];
@@ -121,7 +123,7 @@ export class CategoryInfoComponent implements OnInit {
       this.years.push(year);
     }
     this.selectedYear = this.currentYear;
-
+    this.currentDate = new Date();
     this.categoryId = this.activatedRoute.snapshot.params['id'];
     this.getExpenses(this.categoryId);
     this.categoryService.getCategory(this.categoryId).subscribe(data => {
@@ -311,7 +313,10 @@ export class CategoryInfoComponent implements OnInit {
     }
 
     this.expenseService.addExpnese(this.newExpense, this.categoryId).subscribe({
-      error: e => this.snackBar.open('Error creating expense !', 'Close', { duration: 3000 }),
+      error: e => {
+        this.snackBar.open(e.error, 'Close', { duration: 3000 })
+      }
+        ,
       next: data => {
         this.getExpenses(this.categoryId);
         this.snackBar.open(`Expense saved successfully!`, 'Close', { duration: 3000 });
@@ -324,9 +329,17 @@ export class CategoryInfoComponent implements OnInit {
     return (
       this.newExpense.note &&
       this.newExpense.amount &&
-      (this.newExpense.amount.valueOf() > 0)
+      !isNaN(this.newExpense.amount) &&
+      (this.newExpense.amount.valueOf() > 0) &&
+      this.newExpense.transactionDate &&
+      !this.isFutureDate(this.newExpense.transactionDate)
     );
   }
+
+  isFutureDate(date: Date): boolean {
+    return date > this.currentDate;
+  }
+
   updateChart() {
 
     this.expenseService.getAverageByMonthPerCategory(this.categoryId).subscribe({
@@ -480,6 +493,11 @@ export class CategoryInfoComponent implements OnInit {
     }
     this.lineChartData.push({ data: expensesData, label: 'Expenses' })
 
+  }
+
+    
+  isNotANumber(value: any): boolean {
+    return isNaN(value);
   }
 
 

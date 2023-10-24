@@ -108,8 +108,13 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAllByUserId_UserId(clientId);
 
         return categories.stream()
-                .filter(category -> category.getExpenses().stream()
-                        .allMatch(expense -> expense.getTransactionDate().isBefore(threeMonthsAgo)))
+                .filter(category ->
+                        category.getExpenses().stream()
+                                .allMatch(expense -> expense.getTransactionDate().isBefore(threeMonthsAgo))
+                                &&
+                                category.getExpenses().stream()
+                                        .anyMatch(expense -> expense.getTransactionDate().isBefore(threeMonthsAgo))
+                )
                 .collect(Collectors.toList());
     }
 }

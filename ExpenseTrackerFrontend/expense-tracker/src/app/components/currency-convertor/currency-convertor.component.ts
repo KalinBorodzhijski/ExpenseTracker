@@ -65,7 +65,7 @@ export class CurrencyConvertorComponent {
     if (this.form.valid) {
       
       this.http.get(url, { headers: { 'X-Api-Key': this.apiKey } }).subscribe({
-        error: e => {this.snackBar.open(e.error, 'Close', { duration: 3000 });},
+        error: e => {this.snackBar.open(e.error.error, 'Close', { duration: 3000 });},
         next: data => {
           this.response = data;
           this.result = this.response.new_amount;

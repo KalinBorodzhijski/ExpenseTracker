@@ -133,6 +133,7 @@ export class DashboardComponent implements OnInit {
 
   isFormValid(form: any) {
     return form.amount &&
+      !isNaN(form.amount) &&
       form.note &&
       form.transactionDate &&
       form.amount.valueOf() > 0 &&
@@ -258,6 +259,10 @@ export class DashboardComponent implements OnInit {
       })
     })
 
+  }
+  
+  isNotANumber(value: any): boolean {
+    return isNaN(value);
   }
 
 }

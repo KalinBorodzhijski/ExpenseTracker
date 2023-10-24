@@ -50,7 +50,6 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(57, 192, 237, 0.25);
 }
 
-/* Send button styling */
 button {
   background: linear-gradient(to right, #36D1DC, #5B86E5);
   color: white;

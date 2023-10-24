@@ -34,8 +34,6 @@
   box-shadow: 0 4px 8px rgba(255, 0, 0, 0.1);
 }
 
-
-
 .file-upload-wrapper {
   position: relative;
   display: inline-block;
@@ -67,6 +65,7 @@
 
 
 .unused-categories-card {
+  margin-bottom: 1rem;
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

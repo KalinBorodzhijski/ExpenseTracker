@@ -247,7 +247,7 @@ TRAIN_DATA += [
      {"entities": [(25, 29, 'category_name')], "cats": {"LIST_EXPENSES": True}}),
 
     ("Show me the expenses in vehicle", 
-     {"entities": [(24, 32, 'category_name')], "cats": {"LIST_EXPENSES": True}}),
+     {"entities": [(24, 31, 'category_name')], "cats": {"LIST_EXPENSES": True}}),
 
     ("List all expenses under sports", 
      {"entities": [(24, 30, 'category_name')], "cats": {"LIST_EXPENSES": True}}),

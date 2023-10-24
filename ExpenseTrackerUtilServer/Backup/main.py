@@ -6,15 +6,15 @@ from receipt_scanner import ReceiptScanner
 
 
 app = Flask(__name__)
-chat_bot = ChatBotModel(False)
+chat_bot = ChatBotModel(True)
 scanner = ReceiptScanner()
 
 @app.route('/chatbot', methods=['POST'])
 def chatbot_response():
     try:
         data = request.get_json()
-        #inner_json = json.loads(data['message'])
-        input_text = data['message']
+        inner_json = json.loads(data['message'])
+        input_text = inner_json['message']
         
         info, intent, entities = chat_bot.process_message(input_text)
 
@@ -49,7 +49,7 @@ def predict():
         
         if not data:
             return jsonify(error="Missing 'data' key in request or data is empty"), 400
-
+        print(data)
         model = pm.auto_arima(data, seasonal=False, trace=True,
                       error_action='ignore', suppress_warnings=True, 
                       stepwise=True)
