@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 import json
-import pmdarima as pm
 from chat_bot_model import ChatBotModel
 from receipt_scanner import ReceiptScanner
 
@@ -8,6 +7,28 @@ from receipt_scanner import ReceiptScanner
 app = Flask(__name__)
 chat_bot = ChatBotModel(True)
 scanner = ReceiptScanner()
+custom_weights = [1, 2, 3, 4, 5, 5, 5]
+
+
+def weighted_moving_average(expenses, num_predictions, custom_weights):
+    predictions = []
+
+    for _ in range(num_predictions):
+        if len(expenses) > len(custom_weights):
+            recent_expenses = expenses[-len(custom_weights):]
+        else:
+            recent_expenses = expenses
+        aligned_weights = custom_weights[-len(recent_expenses):]
+        weighted_sum = sum(expense * weight for expense, weight in zip(recent_expenses, aligned_weights))
+        total_weights = sum(aligned_weights)
+        wma = weighted_sum / total_weights
+        expenses.append(wma)
+        if len(expenses) > len(custom_weights):
+            expenses.pop(0)
+
+        predictions.append(wma)
+
+    return predictions
 
 @app.route('/chatbot', methods=['POST'])
 def chatbot_response():
@@ -49,16 +70,14 @@ def predict():
         
         if not data:
             return jsonify(error="Missing 'data' key in request or data is empty"), 400
-        print(data)
-        model = pm.auto_arima(data, seasonal=False, trace=True,
-                      error_action='ignore', suppress_warnings=True, 
-                      stepwise=True)
-
-        forecast = model.predict(n_periods=3)
         
-        return jsonify(predictions=list(forecast))
+        forecast = weighted_moving_average(data, 3, custom_weights)
+        print(forecast)
+        return jsonify(predictions=forecast)
     except Exception as e:
         return jsonify(error=str(e)), 400
 
+
 if __name__ == "__main__":
     app.run(port=5000)
+
