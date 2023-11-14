@@ -65,6 +65,7 @@ public class NetWorthService {
     public Map<YearMonth, Double> getPredictedNetWorth(int clientId) {
         Map<YearMonth, Double> historicalData = getMonthlyNetWorth(clientId);
         int n = historicalData.size();
+        if(n == 0) return Collections.emptyMap();
         double sumX = 0, sumY = 0, sumX2 = 0, sumXY = 0;
 
         int baseYear = YearMonth.now().minusMonths(n).getYear();
