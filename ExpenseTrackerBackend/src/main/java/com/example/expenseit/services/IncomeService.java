@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -29,16 +30,20 @@ public class IncomeService {
                         .transactionDate(LocalDateTime.ofInstant(transactionDate.toInstant(), ZoneId.systemDefault()).toLocalDate())
                         .build());
         clientRepository.save(client);
-        return client.getBalance();
+        return client.getBalance();g
     }
 
     public List<Income> getIncomeHistory(int clientId) {
         Client client = clientRepository.findByUserId(clientId);
+        if(client == null) return Collections.emptyList();
         return client.getIncomeHistory();
     }
 
     public Double getBalance(int clientId) {
         Client client = clientRepository.findByUserId(clientId);
+        if(client == null){
+            return 0.0;
+        }
         return client.getBalance();
     }
 
