@@ -30,7 +30,7 @@ public class IncomeService {
                         .transactionDate(LocalDateTime.ofInstant(transactionDate.toInstant(), ZoneId.systemDefault()).toLocalDate())
                         .build());
         clientRepository.save(client);
-        return client.getBalance();g
+        return client.getBalance();
     }
 
     public List<Income> getIncomeHistory(int clientId) {
