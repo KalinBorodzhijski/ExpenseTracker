@@ -26,6 +26,7 @@ public class NetWorthService {
     public Map<YearMonth, Double> getMonthlyNetWorth(int clientId) {
         LocalDate fiveMonthsAgo = LocalDate.now().minusMonths(5);
         Client client = clientRepository.findByUserId(clientId);
+        if(client == null) return Collections.emptyMap();
         Double balance = client.getBalance();
 
         Map<YearMonth, Double> balanceTrend = new HashMap<>();
