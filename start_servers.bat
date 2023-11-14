@@ -7,10 +7,8 @@ cd ExpenseTrackerFrontend\expense-tracker
 start cmd /k "npm install && ng serve"
 cd ../..
 
-
-
 cd ExpenseTrackerUtilServer
-start cmd /k "py ./main.py"
+start cmd /k "pip install -r requirements.txt && py ./main.py"
 cd ..
 
 echo All servers are starting...
