@@ -4,8 +4,10 @@ start cmd /k "mvn spring-boot:run"
 cd ..
 
 cd ExpenseTrackerFrontend\expense-tracker
-start cmd /k "ng serve"
+start cmd /k "npm install && ng serve"
 cd ../..
+
+
 
 cd ExpenseTrackerUtilServer
 start cmd /k "py ./main.py"
