@@ -7,6 +7,7 @@ from spacy.matcher import Matcher
 from sklearn.model_selection import train_test_split
 from training_data import TRAIN_DATA, GREETING_RESPONSES
 from config import *
+import matplotlib.pyplot as plt
 
 
 
@@ -52,6 +53,8 @@ class ChatBotModel:
         optimizer = self.nlp.begin_training()
         optimizer.learn_rate = 0.01
         train_examples = [Example.from_dict(self.nlp(text), annotations) for text, annotations in TRAIN_DATA]
+
+        training_losses = []
         for i in range(iterations):
             start_time = time.time()
             random.shuffle(train_examples)
@@ -73,7 +76,7 @@ class ChatBotModel:
             combined_score = (textcat_accuracy * textcat_weight) + (ner_accuracy * ner_weight)
 
             print(f"Accuracy on test data at iteration {i} - {combined_score}")
-
+            training_losses.append(1 - combined_score)
             if combined_score > best_combined_score:
                 best_combined_score = combined_score
                 no_improvement = 0
@@ -83,6 +86,14 @@ class ChatBotModel:
             if no_improvement >= patience:
                 print(f"No improvement in accuracy for {patience} consecutive iterations. Stopping training.")
                 break
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(training_losses, label='Training Loss')
+        plt.title("Training Losses")
+        plt.xlabel("Iterations")
+        plt.ylabel("Loss")
+        plt.legend()
+        plt.show()
 
     def get_intent_and_entity(self, input_text):
 

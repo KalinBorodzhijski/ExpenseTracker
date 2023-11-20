@@ -216,6 +216,7 @@ export class CategoryInfoComponent implements OnInit {
         this.snackBar.open(`Expense saved successfully!`, 'Close', { duration: 3000 });
         this.updateChart();
         this.receiptData = null;
+        this.receipFile = null;
       }
     })
 
