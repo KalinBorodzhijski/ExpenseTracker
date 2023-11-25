@@ -4,46 +4,35 @@ import com.example.expenseit.models.Expense;
 import lombok.experimental.UtilityClass;
 
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @UtilityClass
 public class ExpenseAnalysis {
 
-    public static Map<YearMonth, Double> calculateMonthlyAverageByCategory(List<Expense> expenses){
+    public static Map<YearMonth, Double> calculateMonthlyTotalByCategory(List<Expense> expenses){
+        Map<YearMonth, Double> totalAmountPerMonth = new HashMap<>();
+        YearMonth currentMonth = YearMonth.now();
 
-        Map<YearMonth, Double> averageAmountPerMonth = new HashMap<>();
-        Map<YearMonth, Map.Entry<Double, Integer>> sumAndCountPerMonth = new HashMap<>();
         for (Expense expense : expenses) {
             YearMonth yearMonth = YearMonth.from(expense.getTransactionDate());
-            double amount = expense.getAmount();
 
-            sumAndCountPerMonth.compute(yearMonth, (k, v) -> {
-                if (v == null) {
-                    return Map.entry(amount, 1);
-                } else {
-                    double sum = v.getKey() + amount;
-                    int count = v.getValue() + 1;
-                    return Map.entry(sum, count);
-                }
-            });
+            // Check if the expense is within the last 8 months
+            long monthsDifference = ChronoUnit.MONTHS.between(yearMonth, currentMonth);
+            if (monthsDifference >= 0 && monthsDifference < 8) {
+                double amount = expense.getAmount();
+                totalAmountPerMonth.compute(yearMonth, (k, v) -> v == null ? amount : v + amount);
+            }
         }
 
-        for (Map.Entry<YearMonth, Map.Entry<Double, Integer>> entry : sumAndCountPerMonth.entrySet()) {
-            YearMonth yearMonth = entry.getKey();
-            double sum = entry.getValue().getKey();
-            int count = entry.getValue().getValue();
-            double average = sum / count;
-            averageAmountPerMonth.put(yearMonth, average);
-        }
-
-        List<Map.Entry<YearMonth, Double>> entryList = new ArrayList<>(averageAmountPerMonth.entrySet());
+        List<Map.Entry<YearMonth, Double>> entryList = new ArrayList<>(totalAmountPerMonth.entrySet());
         entryList.sort(Map.Entry.comparingByKey());
-        Map<YearMonth, Double> sortedAverageAmountPerMonth = new LinkedHashMap<>();
+        Map<YearMonth, Double> sortedTotalAmountPerMonth = new LinkedHashMap<>();
         for (Map.Entry<YearMonth, Double> entry : entryList) {
-            sortedAverageAmountPerMonth.put(entry.getKey(), entry.getValue());
+            sortedTotalAmountPerMonth.put(entry.getKey(), entry.getValue());
         }
 
-        return sortedAverageAmountPerMonth;
+        return sortedTotalAmountPerMonth;
     }
 
 }

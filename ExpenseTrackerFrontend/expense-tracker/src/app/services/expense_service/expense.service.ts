@@ -35,12 +35,12 @@ export class ExpenseService {
     return this.http.get<Expense[]>(`${this.baseURL}`);
   }
 
-  getAverageByMonthPerCategory(categoryId: number){
-    return this.http.get(`${this.baseURL}/${categoryId}/monthlyAverage`);
+  getTotalExpensesByMonthPerCategory(categoryId: number){
+    return this.http.get(`${this.baseURL}/${categoryId}/monthlyTotals`);
   }
 
-  getAverageByMonth(){
-    return this.http.get(`${this.baseURL}/monthlyAverage`);
+  getTotalExpenseByMonth(){
+    return this.http.get(`${this.baseURL}/monthlyTotals`);
   }
 
   getPredictions(futureDays: number){

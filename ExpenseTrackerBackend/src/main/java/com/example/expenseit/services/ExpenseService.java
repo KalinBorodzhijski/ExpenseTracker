@@ -75,19 +75,19 @@ public class ExpenseService {
                 .collect(Collectors.toList());
     }
 
-    public Map<YearMonth, Double> getMonthlyAverageByCategory(int clientId, int categoryId){
+    public Map<YearMonth, Double> getMonthlyTotalsByCategory(int clientId, int categoryId){
         Category category = categoryRepository.findByCategoryIdAndUserId_UserId(categoryId,clientId);
-        return ExpenseAnalysis.calculateMonthlyAverageByCategory(category.getExpenses());
+        return ExpenseAnalysis.calculateMonthlyTotalByCategory(category.getExpenses());
     }
 
-    public Map<String, Map<YearMonth, Double>> getMonthlyAverage(int clientId) {
+    public Map<String, Map<YearMonth, Double>> getMonthlyTotals(int clientId) {
         List<Category> categories = categoryRepository.findAllByUserId_UserId(clientId);
         Map<String, Map<YearMonth, Double>> averageAmountPerCategory = new HashMap<>();
 
         for (Category category : categories) {
             List<Expense> expenses = category.getExpenses();
-            Map<YearMonth, Double> averageAmountPerMonth = ExpenseAnalysis.calculateMonthlyAverageByCategory(expenses);
-            averageAmountPerCategory.put(category.getTitle(), averageAmountPerMonth);
+            Map<YearMonth, Double> totalAmountPerMonth = ExpenseAnalysis.calculateMonthlyTotalByCategory(expenses);
+            averageAmountPerCategory.put(category.getTitle(), totalAmountPerMonth);
         }
         return averageAmountPerCategory;
     }

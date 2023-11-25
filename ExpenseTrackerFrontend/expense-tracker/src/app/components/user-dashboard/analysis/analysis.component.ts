@@ -29,8 +29,8 @@ export class AnalysisComponent implements OnInit {
   netWorthChartLabels: string[] = [];
 
   categoryData: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
-  chartDataAverageExpensePerMonth: ChartDataset[] = [];
-  chartLabelsAverageExpensePerMonth: string[] = [];
+  chartDataExpensePerMonth: ChartDataset[] = [];
+  chartLabelsExpensePerMonth: string[] = [];
 
   chartDataMonthlyPredictions: ChartDataset[] = [];
   chartLabelsMonthlyPredictions: string[] = [];
@@ -39,7 +39,11 @@ export class AnalysisComponent implements OnInit {
     responsive: true,
     scales: {
       x: { display: true },
-      y: { display: true }
+      y: { 
+        display: true,
+        beginAtZero: true,
+        min: 0
+      }
     }
   };
 
@@ -96,11 +100,11 @@ export class AnalysisComponent implements OnInit {
 
   processChartData() {
 
-    this.expenseService.getAverageByMonth().subscribe({
+    this.expenseService.getTotalExpenseByMonth().subscribe({
       error: e => { this.snackBar.open('Error loading average expenses !', 'Close', { duration: 3000 }) },
       next: data => {
-        this.chartDataAverageExpensePerMonth = [];
-        this.chartLabelsAverageExpensePerMonth = [];
+        this.chartDataExpensePerMonth = [];
+        this.chartLabelsExpensePerMonth = [];
         this.categoryData.clear();
         const cateogries: string[] = [];
         let months = new Set<string>();
@@ -140,10 +144,10 @@ export class AnalysisComponent implements OnInit {
         });
 
         const amountArrayReversed = amountArray[0].map((_, colIndex) => amountArray.map(row => row[colIndex]));
-        this.chartLabelsAverageExpensePerMonth = datesArray;
+        this.chartLabelsExpensePerMonth = datesArray;
         let counter: number = 0;
         amountArrayReversed.forEach(((amounts: number[]) => {
-          this.chartDataAverageExpensePerMonth.push({ data: amounts, label: cateogries.at(counter) })
+          this.chartDataExpensePerMonth.push({ data: amounts, label: cateogries.at(counter) })
           counter++;
 
         }));

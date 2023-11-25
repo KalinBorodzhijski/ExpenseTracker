@@ -60,7 +60,7 @@ class ExpenseServiceTest {
     }
 
     @Test
-    void getMonthlyAverageByCategory() {
+    void getMonthlyTotalsByCategory() {
         int clientId = 1;
         int categoryId = 1;
         Category category = new Category();
@@ -70,13 +70,13 @@ class ExpenseServiceTest {
 
         when(categoryRepository.findByCategoryIdAndUserId_UserId(categoryId, clientId)).thenReturn(category);
 
-        Map<YearMonth, Double> result = expenseService.getMonthlyAverageByCategory(clientId, categoryId);
+        Map<YearMonth, Double> result = expenseService.getMonthlyTotalsByCategory(clientId, categoryId);
 
         assertFalse(result.isEmpty());
     }
 
     @Test
-    void getMonthlyAverage() {
+    void getMonthlyTotals() {
         int clientId = 1;
         Category category = new Category();
         category.setTitle("Test Category");
@@ -86,7 +86,7 @@ class ExpenseServiceTest {
 
         when(categoryRepository.findAllByUserId_UserId(clientId)).thenReturn(Collections.singletonList(category));
 
-        Map<String, Map<YearMonth, Double>> result = expenseService.getMonthlyAverage(clientId);
+        Map<String, Map<YearMonth, Double>> result = expenseService.getMonthlyTotals(clientId);
 
         assertFalse(result.isEmpty());
         assertTrue(result.containsKey("Test Category"));

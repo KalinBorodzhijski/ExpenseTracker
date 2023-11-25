@@ -275,15 +275,18 @@ public class ChatbotService {
     private String handleMonthlySummary(Map<String, String> entities, int clientId) {
         Client client = clientRepository.findByUserId(clientId);
         Month month = Month.valueOf(entities.get(MONTH_NAME).toUpperCase());
+        int currentYear = Year.now().getValue();
         double totalIncome = client.getIncomeHistory()
                 .stream()
-                .filter(income -> income.getTransactionDate().getMonth() == month)
+                .filter(income -> income.getTransactionDate().getMonth() == month
+                        && income.getTransactionDate().getYear() == currentYear)
                 .mapToDouble(Income::getAmount)
                 .sum();
 
         double totalExpense = expenseService.getAllExpensesByUsername(clientId)
                 .stream()
-                .filter(expense -> expense.getTransactionDate().getMonth() == month)
+                .filter(income -> income.getTransactionDate().getMonth() == month
+                        && income.getTransactionDate().getYear() == currentYear)
                 .mapToDouble(Expense::getAmount)
                 .sum();
 

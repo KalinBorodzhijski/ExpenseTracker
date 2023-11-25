@@ -100,20 +100,19 @@ public class ExpenseController {
 
     }
 
-    @GetMapping("/{categoryId}/monthlyAverage")
-    public ResponseEntity<Map<YearMonth, Double>> getMonthlyAverageExpensesPerCategory(@PathVariable int categoryId, HttpServletRequest request){
+    @GetMapping("/{categoryId}/monthlyTotals")
+    public ResponseEntity<Map<YearMonth, Double>> getMonthlyTotalsExpensesPerCategory(@PathVariable int categoryId, HttpServletRequest request){
         int clientId = (int)request.getAttribute("clientId");
-        Map<YearMonth, Double> monthlyAverage = expenseService.getMonthlyAverageByCategory(clientId,categoryId);
+        Map<YearMonth, Double> monthlyAverage = expenseService.getMonthlyTotalsByCategory(clientId,categoryId);
         return new ResponseEntity<>(monthlyAverage,HttpStatus.OK);
     }
 
-    @GetMapping("/monthlyAverage")
-    public ResponseEntity<Map<String,Map<YearMonth, Double>>> getMonthlyAverageExpenses( HttpServletRequest request){
+    @GetMapping("/monthlyTotals")
+    public ResponseEntity<Map<String,Map<YearMonth, Double>>> getMonthlyTotalsExpenses( HttpServletRequest request){
         int clientId = (int)request.getAttribute("clientId");
-        Map<String,Map<YearMonth, Double>> monthlyAverage = expenseService.getMonthlyAverage(clientId);
-        return new ResponseEntity<>(monthlyAverage,HttpStatus.OK);
+        Map<String,Map<YearMonth, Double>> monthlyTotals = expenseService.getMonthlyTotals(clientId);
+        return new ResponseEntity<>(monthlyTotals,HttpStatus.OK);
     }
-
 
     @GetMapping("/monthlyExpensePredictions")
     public ResponseEntity<List<Double>> getMonthlyPredictions(HttpServletRequest request){

@@ -26,7 +26,11 @@ export class CategoryInfoComponent implements OnInit {
     responsive: true,
     scales: {
       x: { display: true },
-      y: { display: true }
+      y: { 
+        display: true,
+        min: 0,
+        beginAtZero: true,   
+      }
     }
   };
 
@@ -119,7 +123,7 @@ export class CategoryInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    for (let year = 2020; year <= this.currentYear; year++) {
+    for (let year = 2020; year <= this.currentYear+1; year++) {
       this.years.push(year);
     }
     this.selectedYear = this.currentYear;
@@ -343,7 +347,7 @@ export class CategoryInfoComponent implements OnInit {
 
   updateChart() {
 
-    this.expenseService.getAverageByMonthPerCategory(this.categoryId).subscribe({
+    this.expenseService.getTotalExpensesByMonthPerCategory(this.categoryId).subscribe({
       error: e => { this.snackBar.open('Error fetching average !', 'Close', { duration: 3000 }) },
       next: (data: any) => {
         const resultMap = new Map<string, number>();
@@ -354,7 +358,7 @@ export class CategoryInfoComponent implements OnInit {
         this.chartData = [
           {
             data: Array.from(resultMap.values()),
-            label: 'Average Expenses'
+            label: 'Expenses'
           }
         ];
       }

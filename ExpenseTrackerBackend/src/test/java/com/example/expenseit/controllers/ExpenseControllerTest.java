@@ -157,32 +157,32 @@ class ExpenseControllerTest {
     }
 
     @Test
-    void getMonthlyAverageExpensesPerCategory() {
+    void getMonthlyTotalsExpensesPerCategory() {
         int clientId = 1;
         int categoryId = 1;
         when(request.getAttribute("clientId")).thenReturn(clientId);
 
-        Map<YearMonth, Double> monthlyAverage = new HashMap<>();
-        when(expenseService.getMonthlyAverageByCategory(clientId, categoryId)).thenReturn(monthlyAverage);
+        Map<YearMonth, Double> monthlyTotals = new HashMap<>();
+        when(expenseService.getMonthlyTotalsByCategory(clientId, categoryId)).thenReturn(monthlyTotals);
 
-        ResponseEntity<Map<YearMonth, Double>> response = expenseController.getMonthlyAverageExpensesPerCategory(categoryId, request);
+        ResponseEntity<Map<YearMonth, Double>> response = expenseController.getMonthlyTotalsExpensesPerCategory(categoryId, request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(monthlyAverage, response.getBody());
+        assertEquals(monthlyTotals, response.getBody());
     }
 
     @Test
-    void getMonthlyAverageExpenses() {
+    void getMonthlyTotalExpenses() {
         int clientId = 1;
         when(request.getAttribute("clientId")).thenReturn(clientId);
 
-        Map<String, Map<YearMonth, Double>> monthlyAverage = new HashMap<>();
-        when(expenseService.getMonthlyAverage(clientId)).thenReturn(monthlyAverage);
+        Map<String, Map<YearMonth, Double>> monthlyTotals = new HashMap<>();
+        when(expenseService.getMonthlyTotals(clientId)).thenReturn(monthlyTotals);
 
-        ResponseEntity<Map<String, Map<YearMonth, Double>>> response = expenseController.getMonthlyAverageExpenses(request);
+        ResponseEntity<Map<String, Map<YearMonth, Double>>> response = expenseController.getMonthlyTotalsExpenses(request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(monthlyAverage, response.getBody());
+        assertEquals(monthlyTotals, response.getBody());
     }
 
     @Test
